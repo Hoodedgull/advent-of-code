@@ -1,4 +1,4 @@
 
-day2/.vscode/
-day2/bin/
-day2/obj/
+*/.vscode/
+*/bin/
+*/obj/
