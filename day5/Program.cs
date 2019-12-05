@@ -9,7 +9,7 @@ namespace day5
         static void Main(string[] args)
         {
 
-            var results = runIntcode(1);
+            var results = runIntcode(5);
             results.ForEach(i => System.Console.WriteLine(i));
 
         }
@@ -40,13 +40,54 @@ namespace day5
                 }
                 else if (opCode.EndsWith("4"))
                 {
+                    if(opCode[0] == '1'){
+                        outputs.Add(list[i+1]);
+                    }else{
+
                     outputs.Add(list[list[i + 1]]);
+                    }
                     i += 2;
+                }
+                else if (opCode.EndsWith("5"))
+                {
+                    var newI = JumpIfTrue(list[i], list[i + 1],list[i+2], list);
+                    if (newI < 0)
+                    {
+                        i += 3;
+                    }
+                    else
+                    {
+                        i = newI;
+                    }
+                }
+                else if (opCode.EndsWith("6"))
+                {
+                    var newI = JumpIfFalse(list[i], list[i + 1],list[i+2], list);
+                    if (newI < 0)
+                    {
+                        i += 3;
+                    }
+                    else
+                    {
+                        i = newI;
+                    }
+                }
+                else if (opCode.EndsWith("7"))
+                {
+                    list[list[i + 3]] = LessThan(list[i], list[i + 1], list[i + 2], list);
+                    i += 4;
+                }
+                else if (opCode.EndsWith("8"))
+                {
+                    list[list[i + 3]] = Equals(list[i], list[i + 1], list[i + 2], list);
+                    i += 4;
                 }
                 else if (opCode.EndsWith("99"))
                 {
                     break;
-                }else{
+                }
+                else
+                {
                     throw new Exception();
                 }
 
@@ -98,6 +139,94 @@ namespace day5
                 sum *= theList[param1];
             }
             return sum;
+        }
+
+        private static int JumpIfTrue(int opCode, int param1, int param2, List<int> theList)
+        {
+
+            var secondValue = 0;
+            if (opCode >= 1000)
+            {
+                secondValue = param2;
+            }
+            else
+            {
+                secondValue = theList[param2];
+            }
+            if((opCode >= 100 && opCode < 1000) || (opCode > 1000 && opCode - 1000 >= 100))
+            {
+                return 0 != param1 ? secondValue : -1;
+            }
+            else
+            {
+                return 0 != theList[param1] ? secondValue: -1;
+            }
+
+        }
+
+        private static int JumpIfFalse(int opCode, int param1, int param2, List<int> theList)
+        {
+
+            var secondValue = 0;
+            if (opCode >= 1000)
+            {
+                secondValue = param2;
+            }
+            else
+            {
+                secondValue = theList[param2];
+            }
+            if((opCode >= 100 && opCode < 1000) || (opCode > 1000 && opCode - 1000 >= 100))
+            {
+                return 0 == param1 ? secondValue : -1;
+            }
+            else
+            {
+                return 0 == theList[param1] ? secondValue: -1;
+            }
+
+        }
+
+        private static int LessThan(int opCode, int param1, int param2, List<int> theList)
+        {
+            var secondValue = 0;
+            if (opCode >= 1000)
+            {
+                secondValue = param2;
+            }
+            else
+            {
+                secondValue = theList[param2];
+            }
+            if ((opCode >= 100 && opCode < 1000) || (opCode > 1000 && opCode - 1000 >= 100))
+            {
+                 return param1 < secondValue ? 1 : 0;
+            }
+            else
+            {
+                return  theList[param1] < secondValue ? 1 : 0;
+            }
+        }
+
+         private static int Equals(int opCode, int param1, int param2, List<int> theList)
+        {
+            var secondValue = 0;
+            if (opCode >= 1000)
+            {
+                secondValue = param2;
+            }
+            else
+            {
+                secondValue = theList[param2];
+            }
+            if ((opCode >= 100 && opCode < 1000) || (opCode > 1000 && opCode - 1000 >= 100))
+            {
+                 return param1 == secondValue? 1 : 0;
+            }
+            else
+            {
+                return theList[param1] == secondValue? 1 : 0;
+            }
         }
     }
 }
