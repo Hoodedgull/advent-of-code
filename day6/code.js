@@ -5,9 +5,20 @@ var list = input.split(',');
 var entries = [];
 let root= findOrbiters("COM");
 let orbits = countOrbits(root, 0)
+let path = findPathToNode("YOU",root,[])
+let path2 = findPathToNode("SAN",root,[])
+let commonPath = path.filter(value => path2.includes(value))
+let lastCommonNode = commonPath[commonPath.length - 1];
+let lengthToMe = findPathToNode("YOU", lastCommonNode,[]).length -1
+let lengthToSAN = findPathToNode("SAN", lastCommonNode,[]).length -1
+console.log(lengthToMe + lengthToSAN)
 
 console.log(root);
 console.log(orbits);
+console.log(path);
+console.log(path2);
+console.log(commonPath);
+console.log(lastCommonNode);
 
 function findOrbiters(code){
     let orbited = {orbited: code, orbiterObjects: [], orbitersCodes: list.filter(i => i.startsWith(code+')')).map(i => i.substring(code.length+1))};
@@ -18,10 +29,26 @@ function findOrbiters(code){
     return orbited
 }
 
-function countOrbits(root, depth){
+function countOrbits(currentNode, depth){
     let orbits = depth// root.orbiterObjects.length;
-    for(let  i = 0; i < root.orbiterObjects.length; i++){
-        orbits+= countOrbits(root.orbiterObjects[i], depth+1)
+    for(let  i = 0; i < currentNode.orbiterObjects.length; i++){
+        orbits+= countOrbits(currentNode.orbiterObjects[i], depth+1)
     }
     return orbits
+}
+
+function findPathToNode(code, currentNode, path){
+    let tmpPath = path.map(x=>x);
+    if(currentNode.orbited === code){
+        return tmpPath;
+    }else{
+        tmpPath.push(currentNode);
+    }
+    for(let  i = 0; i < currentNode.orbiterObjects.length; i++){
+        let pathh = findPathToNode(code, currentNode.orbiterObjects[i],tmpPath)
+        if(pathh.length !== 0){
+            return pathh;
+        }
+    }
+    return [];
 }
