@@ -61,7 +61,8 @@ namespace day9
                 else if (opCode.EndsWith("4"))
                 {
 
-                    Outputs.Add(AccessList(opCode[0], list[programPointer + 1], list));
+              
+                    Outputs.Add(AccessList(opCode[2], list[programPointer + 1], list));
 
                     programPointer += 2;
                 }
@@ -121,7 +122,7 @@ namespace day9
 
             }
 
-
+            
         }
 
         private long addNumbers(long opCode, long param1, long param2, List<long> theList)
